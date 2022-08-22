@@ -70,7 +70,40 @@ void CleanMemory(int**& arr, int m)
 	delete[] arr;
 	arr = nullptr;
 }
-
+void ConcatFiles(std::string source1, std::string source2, std::string dest)
+{
+	std::string result;
+	std::ifstream fin1(source1);
+	if (fin1.is_open())
+	{
+		std::string buf;
+		while (!fin1.eof())
+		{
+			std::getline(fin1, buf);
+			std::cout << buf << std::endl;
+			result += buf;
+		}
+		fin1.close();
+	}
+	result += "\n";
+	std::ifstream fin2(source2);
+	if (fin2.is_open())
+	{
+		std::string buf;
+		while (!fin2.eof())
+		{
+			std::getline(fin2, buf);
+			std::cout << buf << std::endl;
+			result += buf;
+		}
+		fin2.close();
+	}
+	std::string concatfilename = dest;
+	concatfilename += ".txt";
+	std::ofstream fout3(concatfilename);
+	fout3 << result << std::endl;
+	fout3.close();
+}
 
 int main()
 {
@@ -112,39 +145,7 @@ int main()
 	fout2 << text2 << std::endl;
 	fout2.close();
 	//----------------------4---------------------------
-	std::string result;
-	std::ifstream fin1(f1);
-	if (fin1.is_open())
-	{
-		std::string buf;
-		while (!fin1.eof())
-		{
-			std::getline(fin1, buf);
-			std::cout << buf << std::endl;
-			result += buf;
-		}
-		fin1.close();
-	}
-	result += "\n";
-	std::ifstream fin2(f2);
-	if (fin2.is_open())
-	{
-		std::string buf;
-		while (!fin2.eof())
-		{
-			std::getline(fin2, buf);
-			std::cout << buf << std::endl;
-			result += buf;
-		}
-		fin2.close();
-	}
-	std::string concatfilename;
-	std::cout << "Enter concat filename:";
-	std::cin >> concatfilename;
-	concatfilename += ".txt";
-	std::ofstream fout3(concatfilename);
-	fout3 << result << std::endl;
-	fout3.close();
+	ConcatFiles(f1, f2, "result");
 	//----------------------5-------------------------
 	std::string filename, wordToFind;
 	std::cout << "Input filename to find a word:" << std::endl;
