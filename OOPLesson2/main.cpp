@@ -7,6 +7,19 @@ using namespace std;
 class Person
 {
 public:
+	Person()
+	{
+		counter++;
+	}
+	~Person()
+	{
+		counter--;
+		cout << CountCreatedPersons() << endl;
+	}
+	static int CountCreatedPersons()
+	{
+		return counter;
+	}
 	void SetName(string _name)
 	{
 		name = _name;
@@ -28,6 +41,8 @@ public:
 	{
 		cout << name << endl << age << endl << GetSex() << endl << weight << endl;
 	}
+protected:
+	static int counter;
 private:
 	string name;
 	int age;
@@ -38,10 +53,6 @@ private:
 class Student : public Person
 {
 public:
-	Student(int& counter)
-	{
-		counter++;
-	}
 	void SetYear(int value)
 	{
 		year = value;
@@ -58,6 +69,8 @@ public:
 private:
 	int year = 2020;
 };
+
+int Person::counter = 0;
 
 class Fruit
 {
@@ -129,24 +142,23 @@ public:
 	{
 		SetName("Granny Smith apple");
 	}
-	
+
 };
 
 int main()
 {
 	//----------------1-------------------
-	int counter = 0;
-	Student s1(counter);
+	Student s1;
 	s1.SetName("Student1");
 	s1.SetAge(21);
 	s1.SetWeight(70);
 	s1.IncreaseYear();
-	Student s2(counter);
+	Student s2;
 	s2.SetName("Student2");
 	s2.SetAge(22);
 	s2.SetWeight(67);
 	s2.SetYear(2024);
-	Student s3(counter);
+	Student s3;
 	s3.SetName("Student3");
 	s3.SetAge(23);
 	s3.SetWeight(54);
@@ -156,7 +168,7 @@ int main()
 	s1.Print();
 	s2.Print();
 	s3.Print();
-	cout << counter << endl << endl;
+	cout << Person::CountCreatedPersons() << endl << endl;
 
 	cout << "----------------------------------------------------" << endl;
 	//----------------2-------------------
