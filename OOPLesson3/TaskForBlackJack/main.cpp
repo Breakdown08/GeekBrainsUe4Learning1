@@ -31,14 +31,20 @@ enum class TCardValue : int
 
 class Card
 {
-public:
+private:
 	TSuit suit;
 	TCardValue value;
 	bool isOpened = false;
-
-	Card()
+public:
+	Card(TCardValue value, TSuit suit)
 	{
+		this->value = value;
+		this->suit = suit;
+	}
 
+	bool IsOpened()
+	{
+		return isOpened;
 	}
 
 	void Flip()
@@ -54,16 +60,14 @@ public:
 
 int main()
 {
-	Card someCard;
-	someCard.value = TCardValue::ACE;
-	someCard.suit = TSuit::SPADES;
-	cout << someCard.isOpened << endl;
+	Card someCard(TCardValue::ACE, TSuit::SPADES);
+	cout << someCard.IsOpened() << endl;
 	someCard.Flip();
-	cout << someCard.isOpened << endl;
+	cout << someCard.IsOpened() << endl;
 	someCard.Flip();
-	cout << someCard.isOpened << endl;
+	cout << someCard.IsOpened() << endl;
 	someCard.Flip();
-	cout << someCard.isOpened << endl;
+	cout << someCard.IsOpened() << endl;
 	cout << endl << endl;
 	cout << someCard.GetValue() << endl;
 }
