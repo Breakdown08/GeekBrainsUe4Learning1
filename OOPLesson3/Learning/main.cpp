@@ -2,6 +2,8 @@
 #include <cstdint>
 #include <string>
 
+#define PI 3.14159265
+
 using namespace std;
 
 class Figure
@@ -11,10 +13,18 @@ class Figure
 
 class Parallelogram : Figure
 {
+private:
+	double angle;
 public:
 	Parallelogram()
 	{
 
+	}
+	Parallelogram(double _a, double _b, double _angle)
+	{
+		width = _a;
+		height = _b;
+		angle = _angle;
 	}
 	Parallelogram(double _width, double _height)
 	{
@@ -22,12 +32,16 @@ public:
 		height = _height;
 	}
 	double width, height;
+	double area() override
+	{
+		return width * height * sin(angle * PI/180);
+	}
 };
 
 class Rectangle : Parallelogram
 {
 public:
-	Rectangle(double _width, double _height): Parallelogram(_width, _height)
+	Rectangle(double _width, double _height) : Parallelogram(_width, _height)
 	{
 
 	}
@@ -40,13 +54,13 @@ public:
 class Square : Parallelogram
 {
 public:
-	Square(double side) 
+	Square(double side)
 	{
 		width = side;
 	}
 	double area() override
 	{
-		return width * width; 
+		return width * width;
 	}
 };
 class Rhombus : Parallelogram
@@ -54,7 +68,7 @@ class Rhombus : Parallelogram
 private:
 	double diag1, diag2;
 public:
-	Rhombus(double d1, double d2): Parallelogram(d1, d2)
+	Rhombus(double d1, double d2) : Parallelogram(d1, d2)
 	{
 		diag1 = d1;
 		diag2 = d2;
@@ -107,7 +121,7 @@ public:
 	{
 		cout << "DEFAULT PASSANGER CAR CONSTRUCTOR" << endl;
 	}
-	PassengerCar(string company, string model) : Car(company, model) 
+	PassengerCar(string company, string model) : Car(company, model)
 	{
 		cout << "PASSANGER CAR CREATED" << endl;
 	}
@@ -119,7 +133,7 @@ public:
 	{
 		cout << "DEFAULT BUS CONSTRUCTOR" << endl;
 	}
-	Bus(string company, string model) : Car(company, model) 
+	Bus(string company, string model) : Car(company, model)
 	{
 		cout << "BUS CREATED" << endl;
 	}
@@ -162,7 +176,7 @@ public:
 	}
 	Fraction operator-() const
 	{
-		return Fraction(-numerator, -denominator);
+		return Fraction(-numerator, denominator);
 	}
 	friend Fraction operator+ (const Fraction& f1, const Fraction& f2);
 	friend Fraction operator- (const Fraction& f1, const Fraction& f2);
@@ -180,7 +194,7 @@ public:
 		{
 			return true;
 		}
-		else 
+		else
 		{
 			return false;
 		}
@@ -191,7 +205,7 @@ public:
 		{
 			return true;
 		}
-		else 
+		else
 		{
 			return false;
 		}
@@ -319,6 +333,8 @@ Fraction operator/(const Fraction& f1, const Fraction& f2)
 int main()
 {
 	//--------------------------1---------------------------------
+	Parallelogram par(10, 8, 30);
+	cout << par.area() << endl;
 	Rectangle rec(2, 3);
 	cout << rec.area() << endl;
 	Square sqr(3);
