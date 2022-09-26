@@ -53,49 +53,23 @@ void SwapDate(shared_ptr<Date>& ptr1, shared_ptr<Date>& ptr2)
 	ptr2 = std::move(temp);
 }
 
-shared_ptr<Date> OlderDate(shared_ptr<Date>& d1, shared_ptr<Date>& d2)
+shared_ptr<Date> LaterDate(shared_ptr<Date>& d1, shared_ptr<Date>& d2)
 {
-	if (d2->Year() >= d1->Year())
-	{
-		if (d2->Month() >= d1->Month())
-		{
-			if (d2->Day() >= d1->Day())
-			{
-				return d2;
-			}
-			else
-			{
-				return d1;
-			}
-		}
-		else if (d2->Day() >= d1->Day())
-		{
-			return d2;
-		}
-		else
-		{
-			return d1;
-		}
-	}
-	else if (d2->Month() >= d1->Month())
-	{
-		if (d2->Day() >= d1->Day())
-		{
-			return d2;
-		}
-		else
-		{
-			return d1;
-		}
-	}
-	else if (d2->Day() >= d1->Day())
-	{
-		return d2;
-	}
-	else
+	//это очень грубая и приближенная реализация рачета, 
+	//конечно же нужно учесть и високосный год и неравное количество дней в месяце
+	//что достигается дополнительной реализацией функционала
+	int d1_days = d1->Year() * 365 + d1->Month() * 30 + d1->Day();
+	int d2_days = d2->Year() * 365 + d2->Month() * 30 + d2->Day();
+	if (d1_days >= d2_days)
 	{
 		return d1;
 	}
+	else
+	{
+		return d2;
+	}
+	return d1;
+	
 }
 
 int main()
@@ -132,5 +106,5 @@ int main()
 	cout << date2 << endl;
 
 	cout << endl << endl;
-	cout << OlderDate(date1, date2) << endl;
+	cout << LaterDate(date1, date2) << endl;
 }
