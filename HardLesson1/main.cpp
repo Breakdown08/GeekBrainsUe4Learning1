@@ -8,23 +8,6 @@
 #include <iomanip>
 #include <algorithm>
 
-template < typename T >
-int GetLongestString(std::string type, T entity)
-{
-    if (type == "lastname")
-    {
-        entity.storage.sort();
-    }
-    else if (type == "firstname")
-    {
-
-    }
-    else if (type == "patronymic")
-    {
-
-    }
-}
-
 struct Person
 {
     std::string LastName;
@@ -37,7 +20,7 @@ std::ostream& operator << (std::ostream& os, const Person& p)
     os << std::setw(width) << p.LastName << " " << std::setw(width) << p.FirstName;
     if (p.Patronymic)
     {
-        os << " " << std::setw(width) << * p.Patronymic;
+        os << " " << std::setw(width) << *p.Patronymic;
     }
     else
     {
@@ -101,23 +84,27 @@ public:
 
         if (stream.is_open())
         {
-            std::string row;
-            std::stringstream rowStream;
-            std::string personString;
-            std::string personPatronymic;
-            std::string phoneState;
-            std::string phoneCity;
-            std::string phoneNumber;
-            std::string phoneAdditional;
+
             Person person;
             PhoneNumber phone;
             std::pair<Person, PhoneNumber> pair;
             while (!stream.eof())
             {
+                std::string row;
+                std::stringstream rowStream;
+                std::string personString;
+                std::string personPatronymic;
+                std::string phoneState;
+                std::string phoneCity;
+                std::string phoneNumber;
+                std::string phoneAdditional;
                 std::getline(stream, row);
                 rowStream << row;
                 std::getline(rowStream, personString, ';') >> phoneState >> phoneCity >> phoneNumber >> phoneAdditional;
-
+                phone.additional.reset();
+                phone.state = NULL;
+                phone.city = NULL;
+                phone.number = "";
                 phone.state = std::stoi(phoneState);
                 phone.city = std::stoi(phoneCity);
                 phone.number = phoneNumber;
@@ -130,7 +117,7 @@ public:
                 personPatronymic = "";
                 person.FirstName = "";
                 person.LastName = "";
-                person.Patronymic.reset();
+                person.Patronymic = std::nullopt;
                 rowStream >> person.LastName >> person.FirstName >> personPatronymic;
                 if (personPatronymic != "")
                 {
@@ -144,10 +131,47 @@ public:
             stream.close();
         }
     }
-
     std::tuple<std::string, PhoneNumber> GetPhoneNumber(std::string lastname)
     {
+        std::tuple<std::string, PhoneNumber> tuple;
+        int entryCount = 0;
+        PhoneNumber phoneNumber;
+        for (auto item : storage)
+        {
+            if (item.first.LastName == lastname)
+            {
+                entryCount++;
+                phoneNumber = item.second;
+            }
+        }
+        if (entryCount > 0)
+        {
+            if (entryCount == 1)
+            {
+                std::get<PhoneNumber>(tuple) = phoneNumber;
+            }
+            else
+            {
+                std::get<std::string>(tuple) = "found more than 1";
+                std::get<PhoneNumber>(tuple) = phoneNumber;
+            }
+        }
+        else
+        {
+            std::get<std::string>(tuple) = "not found";
+        }
+        return tuple;
+    }
 
+    void ChangePhoneNumber(const Person& p, const PhoneNumber& ph)
+    {
+        for (auto& item : storage)
+        {
+            if (item.first == p)
+            {
+                item.second = ph;
+            }
+        }
     }
 
     struct SortPerson
@@ -185,20 +209,8 @@ std::ostream& operator<< (std::ostream& out, PhoneBook& phoneBook)
     {
         out << phoneBook.storage[i].first << " " << phoneBook.storage[i].second << std::endl;
     }
-    //out << std::endl;
     return out;
 }
-
-//int main()
-//{
-//  setlocale(LC_ALL, "Russian");
-//  Person p;
-//  p.FirstName = "Кирилл";
-//  p.LastName = "Мищенко";
-//  p.Patronymic = "Александрович";
-//  std::cout << p << std::endl;
-//}
-
 
 int main()
 {
@@ -215,23 +227,23 @@ int main()
     std::cout << "-----GetPhoneNumber-----" << std::endl;
     // лямбда функция, которая принимает фамилию и выводит номер телефона
     //человека, либо строку с ошибкой
-    auto print_phone_number = [&book](const std::string& surname) 
+    auto print_phone_number = [&book](const std::string& surname)
     {
-          std::cout << surname << "\t";
-      auto answer = book.GetPhoneNumber(surname);
-      if (std::get<0>(answer).empty())
-          std::cout << std::get<1>(answer);
-      else
-          std::cout << std::get<0>(answer);
-      std::cout << std::endl;
+        std::cout << surname << "\t";
+        auto answer = book.GetPhoneNumber(surname);
+        if (std::get<0>(answer).empty())
+            std::cout << std::get<1>(answer);
+        else
+            std::cout << std::get<0>(answer);
+        std::cout << std::endl;
     };
     // вызовы лямбды
-    //print_phone_number("Ivanov");
-    //print_phone_number("Petrov");
-    //std::cout << "----ChangePhoneNumber----" << std::endl;
-    //book.ChangePhoneNumber(Person{ "Kotov", "Vasilii", "Eliseevich" },
-    //  PhoneNumber{ 7, 123, "15344458", std::nullopt });
-    //book.ChangePhoneNumber(Person{ "Mironova", "Margarita", "Vladimirovna" },
-    //  PhoneNumber{ 16, 465, "9155448", 13 });
-    //std::cout << book;
+    print_phone_number("Ivanov");
+    print_phone_number("Petrov");
+    std::cout << "----ChangePhoneNumber----" << std::endl;
+    book.ChangePhoneNumber(Person{ "Kotov", "Vasilii", "Eliseevich" },
+      PhoneNumber{ 7, 123, "15344458", std::nullopt });
+    book.ChangePhoneNumber(Person{ "Mironova", "Margarita", "Vladimirovna" },
+      PhoneNumber{ 16, 465, "9155448", 13 });
+    std::cout << book;
 }
