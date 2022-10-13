@@ -33,9 +33,14 @@ void PrintPointers(vector<const int*>& v, bool pointers = false)
 template < typename T >
 void SortPointers(vector<T*>& vec)
 {
-    sort(vec.begin(), vec.end(), [](T* a, T* b)
-        {
-            return (*a < *b);
+    //sort(vec.begin(), vec.end(), [](T* a, T* b)
+    //    {
+    //        return (*a < *b);
+    //    });
+    qsort(vec.data(), vec.size(), sizeof(T), [](T* a, T* b) {
+        if (*a < *b) return -1;
+        if (*a > *b) return 1;
+        return 0;
         });
 }
 
