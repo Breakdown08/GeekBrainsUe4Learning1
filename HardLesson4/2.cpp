@@ -19,29 +19,36 @@ double fRand(double fMin, double fMax)
 	return fMin + f * (fMax - fMin);
 }
 
-std::vector<double> InstanceDoubleVector(int min, int max)
+std::vector<double> InstanceDoubleVector(int min, int max, int size = 100)
 {
-	std::vector<double> vec;
-	for (size_t i = 0; i < 5; i++)
-	{
-		vec.push_back(fRand(min, max));
-	}
+	std::vector<double> vec(size);
+	std::generate(vec.begin(), vec.end(), [min, max](){ return fRand(min, max); });
 	return vec;
 }
 
-std::vector<int> DoubleToIntVector(const std::vector<double> doubleVec) 
+std::vector<int> DoubleToIntVector(const std::vector<double> doubleVec)
 {
 	std::vector<int> intVec;
 	std::transform(doubleVec.begin(), doubleVec.end(), std::back_inserter(intVec), [](double value) { return (int)value; });
 	return intVec;
 }
 
+double CountError(const std::vector<double>& a, const std::vector<int>& b)
+{
+	double sum;
+	for (size_t i = 0; i < a.size(); i++)
+	{
+		sum += pow((a[i] - b[i]), 2);
+	}
+	return sum;
+}
+
 int main()
 {
 	srand(time(NULL));
-
 	std::vector<double> doubleVec = InstanceDoubleVector(-50, 50);
 	PrintVector(doubleVec);
 	std::vector<int> intVec = DoubleToIntVector(doubleVec);
 	PrintVector(intVec);
 }
+ 
