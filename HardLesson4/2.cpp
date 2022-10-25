@@ -22,7 +22,7 @@ double fRand(double fMin, double fMax)
 std::vector<double> InstanceDoubleVector(int min, int max, int size = 100)
 {
 	std::vector<double> vec(size);
-	std::generate(vec.begin(), vec.end(), [min, max](){ return fRand(min, max); });
+	std::generate(vec.begin(), vec.end(), [min, max]() { return fRand(min, max); });
 	return vec;
 }
 
@@ -35,7 +35,7 @@ std::vector<int> DoubleToIntVector(const std::vector<double> doubleVec)
 
 double CountError(const std::vector<double>& a, const std::vector<int>& b)
 {
-	double sum;
+	double sum = 0;
 	for (size_t i = 0; i < a.size(); i++)
 	{
 		sum += pow((a[i] - b[i]), 2);
@@ -46,9 +46,9 @@ double CountError(const std::vector<double>& a, const std::vector<int>& b)
 int main()
 {
 	srand(time(NULL));
-	std::vector<double> doubleVec = InstanceDoubleVector(-50, 50);
-	PrintVector(doubleVec);
+	std::vector<double> doubleVec = InstanceDoubleVector(-50, 50, 100);
+	// PrintVector(doubleVec);
 	std::vector<int> intVec = DoubleToIntVector(doubleVec);
-	PrintVector(intVec);
+	// PrintVector(intVec);
+	std::cout << CountError(doubleVec, intVec) << std::endl;
 }
- 
