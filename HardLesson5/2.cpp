@@ -1,33 +1,28 @@
 #include <iostream>
 #include <string>
-#include <set>
-#include <vector>; 
+#include <set> 
 #include <sstream>; 
 using namespace std;
 
 
-
-
 int main()
 {
-    string str = "Welcome to coding with art";
-
-    stringstream ss(str);       // declare stringstream for string str
+    setlocale(LC_ALL, "Russian");
+    string str = "Первое предложение. Второе предложение из пяти слов!";
+    stringstream ss(str);
     string word;
-    vector<string> words;
-    int wordcount = 0;
+    int wordCount = 0;
     while (ss >> word) {
+        cout << word << " ";
+        wordCount++;
         for (auto ch : word)
         {
             if ((ch == '.') || (ch == '!') || (ch == '?'))
             {
-                words.
+                cout << " (Слов в предложении: " << wordCount << ")" << endl;
+                wordCount = 0;
+                break;
             }
         }
-        words.push_back(word);
     }
-    cout << "No of words : " << wordcount << "\n";
-    for (string word : words)
-        cout << word << "\n";
-    return 0;
 }
