@@ -1,3 +1,5 @@
+#include "pch.h"
+#include <gtest/gtest.h>
 #include <iostream>
 #include <clocale>  
 #include <optional>
@@ -212,8 +214,51 @@ std::ostream& operator<< (std::ostream& out, PhoneBook& phoneBook)
     return out;
 }
 
-int main()
+class TestPhoneNumber : public testing::Test {
+protected:
+    PhoneNumber* phone;
+    void SetUp() override {
+        phone = new PhoneNumber{ 7, 911, "1234567" };
+    }
+    void TearDown() override {
+        delete phone;
+    }
+    
+};
+
+class TestBook : public testing::Test {
+protected:
+    
+    PhoneBook* book;
+    void SetUp() override {
+        std::ifstream file(DATA_FILE);
+        book = new PhoneBook(file);
+    }
+    void TearDown() override {
+        delete book;
+    }
+
+};
+
+
+TEST_F(TestPhoneNumber, HasValue)
 {
+    ASSERT_EQ(phone->additional.has_value(), false);
+}
+
+TEST_F(TestPhoneNumber, AddAdditional)
+{
+    phone->additional = 12;
+    ASSERT_EQ(phone->additional.has_value(), true);
+}
+
+TEST_F(TestBook, CheckSortByName)
+{
+    book->SortByName();
+    ASSERT_EQ(book->storage[0].first.LastName, "Ivanov");
+}
+
+int main(int argc, char* argv[]) {
     setlocale(LC_ALL, "Russian");
     std::ifstream file(DATA_FILE);
     PhoneBook book(file);
@@ -242,8 +287,13 @@ int main()
     print_phone_number("Petrov");
     std::cout << "----ChangePhoneNumber----" << std::endl;
     book.ChangePhoneNumber(Person{ "Kotov", "Vasilii", "Eliseevich" },
-      PhoneNumber{ 7, 123, "15344458", std::nullopt });
+        PhoneNumber{ 7, 123, "15344458", std::nullopt });
     book.ChangePhoneNumber(Person{ "Mironova", "Margarita", "Vladimirovna" },
-      PhoneNumber{ 16, 465, "9155448", 13 });
+        PhoneNumber{ 16, 465, "9155448", 13 });
     std::cout << book;
+
+    PhoneNumber testphone{ 7, 911, "1234567", 12 };
+    std::cout << testphone << std::endl;
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
