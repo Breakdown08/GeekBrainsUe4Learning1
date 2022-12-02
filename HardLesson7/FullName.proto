@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package Students;
+
+message FullName {
+	string FirstName = 1;
+	string LastName = 2;
+	optional string Patronymic = 3;
+}
+
+

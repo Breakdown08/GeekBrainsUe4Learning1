@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package Students;
+
+import "FullName.proto";
+
+message Student {
+	FullName Name = 1;
+	repeated int32 Marks = 2;
+	int32 Avg = 3;
+}
+
+
